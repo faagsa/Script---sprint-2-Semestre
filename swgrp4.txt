@@ -1,0 +1,60 @@
+enable
+configure terminal
+hostname SWGRP4
+banner motd "acesso apenas para pessoas autorizadas do grupo4"
+enable secret Grupo004
+service password-encryption
+ip domain-name grupo4.local
+crypto key generate rsa general-keys modulus 1024
+username grupo4 privilege 15 secret Grupo004
+username administrador privilege 15 secret admin
+line console 0
+password SenhadaConsole
+login
+exit
+line vty 0 15
+transport input ssh
+exec-timeout 5
+login local
+exit
+vlan 50
+name vlan50
+exit
+vlan 60
+name vlan60
+exit
+vlan 40
+name vlan40
+exit
+vlan 100
+name vlan100
+exit
+interface range fastethernet 0/1-5
+switchport mode access
+switchport access vlan 40
+description interface vlan 40
+exit
+interface range fastethernet 0/6-10
+switchport mode access
+switchport access vlan 50
+description interface vlan 50
+exit
+interface range fastethernet 0/11-15
+switchport mode access
+switchport access vlan 60
+description interface vlan 60
+exit
+interface vlan 100
+ip address 172.20.6.194 255.255.255.252
+description interface de gerenciamento
+no shutdown
+exit
+interface fastethernet0/24
+switchport mode trunk
+switchport trunk allowed vlan 40,50,60
+switchport trunk native vlan 99
+exit
+ip default-gateway 172.20.6.193
+do wr
+
+
